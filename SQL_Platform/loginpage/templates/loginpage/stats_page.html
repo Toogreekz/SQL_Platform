@@ -14,7 +14,7 @@
     {% get_active_students as students %}
     {% for student in students %}
 
-        {% get_n_solutions user=user as number %}
+        {% get_n_solutions user=student as number %}
         {% get_percent_success_solutions user=student as success %}
         <div class="student-info">
             <p>Фамилия Имя: {{student.first_name}} {{student.last_name}}</p>

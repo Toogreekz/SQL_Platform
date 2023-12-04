@@ -23,11 +23,11 @@
                     <a class="sidebar-button">Профиль {{user.last_name}} {{user.first_name}}</a>
                     <a class="sidebar-button" href="{% url 'home' %}">Home</a>
                     <a class="sidebar-button" href="{% url 'rating' %}">Рейтинг</a>
-                    <a class="sidebar-button" href="{% url 'logout' %}">Разлогиниться</a>
                     {% if_user_admin user_id=user.id as admin %}
                     {% if admin %}
                         <a class="sidebar-button" href="{% url 'stats' %}">Статистика студентов</a>
                     {% endif %}
+                    <a class="sidebar-button" href="{% url 'logout' %}">Разлогиниться</a>
                 </div>
 
                 <!-- Основное поле -->

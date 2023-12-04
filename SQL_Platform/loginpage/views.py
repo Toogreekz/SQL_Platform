@@ -52,15 +52,15 @@ def get_query_result(request):
                 print(user.tasks_completed)
                 user.save()
                 
-            a = Solutions()
-            a.input = query
-            if result == result_benchmark:
-                a.status = 0
-            else:
-                a.status = 1
-            a.tasks_id = task_id
-            a.user_id = request.user.id
-            a.save()
+        a = Solutions()
+        a.input = query
+        if result == result_benchmark and st1 and st2:
+            a.status = 0
+        else:
+            a.status = 1
+        a.tasks_id = task_id
+        a.user_id = request.user.id
+        a.save()
         
         data = {'result': result,
                 'result_benchmark': result_benchmark}

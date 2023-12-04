@@ -2,26 +2,32 @@ from tabulate import tabulate
 import psycopg2
 
 
-try:
-    connection = psycopg2.connect(database='postgres', user='postgres', password='1234', host="localhost", port=5432)
-    cursor = connection.cursor()
-    CONNECTION = True
-except (Exception, psycopg2.Error) as error:
-    CONNECTION = False
-
-
 def query_result(query):
+    try:
+        connection = psycopg2.connect(database='postgres', user='postgres', password='1234', host="localhost", port=5432)
+        cursor = connection.cursor()
+        CONNECTION = True
+    except (Exception, psycopg2.Error) as error:
+        CONNECTION = False
+        
     if CONNECTION:
         try:
-            cursor.execute(query) # Если подается какая-то хрень, не работает даже с эталонным запросом!
+            cursor.execute(query)
             result = cursor.fetchall()
             columns = [desc[0] for desc in cursor.description]
+            
+            cursor.connection.close()
+            cursor = None
+            CONNECTION = False
+            
             return True, tabulate(result, headers=columns)
-        except psycopg2.errors.SyntaxError:
-            return False, "Ошибка синтаксиса"
-        except psycopg2.Error as error:
-            return False, str(error)
-        except Exception as error:
+        
+        except (psycopg2.Error, Exception, psycopg2.errors.SyntaxError) as error:
+            
+            cursor.connection.close()
+            cursor = None
+            CONNECTION = False
+            
             return False, str(error)
         
     return False, "Connection to database failed."
