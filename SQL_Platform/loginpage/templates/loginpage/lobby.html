@@ -1,0 +1,50 @@
+{% extends 'sidebar.html' %}
+
+{% load static %}
+{% load tasks_tags %}
+
+{% block header %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/index.css' %} ">
+    <title>Home</title>
+{% endblock %}
+
+{% block main_block %}
+    <h2>Задачи</h2>
+    {% get_active_themes as themes %}
+    {% for theme in themes %}
+        <h4>{{ theme.name }}</h4>
+
+        <table>
+            <tr>
+                <td><b>id</b></td>
+                <td><b>name</b></td>
+                <td><b>difficulty</b></td>
+                <td><b>status</b></td>
+            </tr>
+
+            {% get_active_tasks_in_theme theme=theme as tasks %}
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.id }}</td>
+                <td><a href="{% url 'task' task.id %}">{{ task.name }}</a></td>
+                <td>{{ task.difficulty }}</td>
+                {% get_status_of_task task=task user=user as solutions %}
+                    {% if_any_success_in_solutions solutions=solutions as s %}
+
+                    {% if solutions is not none and solutions|length > 0 %}
+                        {% if s %}
+                            <td style="color: lightgreen">Решено</td>
+                        {% else %}
+                            <td style="color: red">Не Решено</td>
+                        {% endif %}
+                    {% else %}
+                        <td>Не приступал</td>
+                    {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+    {% endfor %}
+{% endblock %}
+

@@ -1,0 +1,45 @@
+{% extends 'sidebar.html' %}
+
+{% load static %}
+{% load tasks_tags %}
+
+{% block header %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/index.css' %} ">
+    <title>Task {{task.id}} - {{ task.name }}</title>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#sendQuery").on('click', function() {
+                var get_query = $("#queryArea").val();
+                var get_taskid = "{{ task.id }}"
+                $.ajax({
+                    url: "{% url 'query' %}",
+                    type: "POST",
+                    data: { query: get_query,
+                            task_id: get_taskid },
+                    success: function(response) {
+                        $("#result").text(response.result);
+                        $("#expected").text(response.result_benchmark);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block main_block %}
+    <div>
+        <p id="task-name">{{task.id}}. {{ task.name }}</p>
+        <p>{{ task.description }}</p> 
+    </div>
+
+    <textarea id="queryArea" cols="70" rows="20" placeholder="Решение" style="resize: none;"></textarea>
+    <button id="sendQuery">Отправить</button>
+    <div>
+        <textarea id="expected" cols="70" rows="20" placeholder="Ожидание" style="resize: none; white-space: nowrap;"></textarea>
+        <textarea id="result" cols="70" rows="20" placeholder="Реальность" style="resize: none; white-space: nowrap;"></textarea>
+    </div>
+{% endblock %}

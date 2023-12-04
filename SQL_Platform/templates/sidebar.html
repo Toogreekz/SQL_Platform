@@ -1,0 +1,46 @@
+{% load static %}
+{% load tasks_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block header %}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{% static 'css/index.css' %} ">
+    {% endblock %}
+</head>
+<body>
+    {% if user.is_authenticated %}
+        <div>
+            <!-- Надпись свреху -->
+            <div id="panel">
+                SQL Platform
+            </div>
+            
+            <div id="main-block">
+                <!-- Sidebar (панель слева) -->  
+                <div id="sidebar">
+                    <a class="sidebar-button">Профиль {{user.last_name}} {{user.first_name}}</a>
+                    <a class="sidebar-button" href="{% url 'home' %}">Home</a>
+                    <a class="sidebar-button" href="{% url 'rating' %}">Рейтинг</a>
+                    <a class="sidebar-button" href="{% url 'logout' %}">Разлогиниться</a>
+                    {% if_user_admin user_id=user.id as admin %}
+                    {% if admin %}
+                        <a class="sidebar-button" href="{% url 'stats' %}">Статистика студентов</a>
+                    {% endif %}
+                </div>
+
+                <!-- Основное поле -->
+                <div id="main-content">
+                    {% block main_block %}
+
+                    {% endblock %}
+                </div>
+            </div>
+            
+        </div>
+    {% else %}
+        <p>Login first.</p>
+    {% endif %}
+</body>
+</html>
